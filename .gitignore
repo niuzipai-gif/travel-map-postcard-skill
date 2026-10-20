@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+output/
+cache/
+private/
+*.jpg
+*.jpeg
+*.png
+*.tif
+*.tiff
+*.webp
+*.zip
