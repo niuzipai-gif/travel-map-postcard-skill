@@ -14,6 +14,11 @@ private/
 *.webp
 *.zip
 
-# Only these two approved README examples are public.
+# Only these explicitly approved README examples are public.
 !/examples/tokyo-odaiba.jpg
 !/examples/nara-wakakusa.jpg
+!/examples/odaiba-liberty-v02.jpg
+!/examples/fuji-kawaguchiko-v02.jpg
+!/examples/akashi-kaikyo-v02.jpg
+!/examples/kyoto-kiyomizu-v02.jpg
+!/examples/sapporo-susukino-v02.jpg

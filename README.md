@@ -6,6 +6,30 @@ An agent skill for researched location identification and editorial map overlays
 
 ## 效果展示
 
+### v0.2.0 · 日本五景最终版
+
+以下五张为照片提供者确认并授权展示的最终成品，展示本次细线地图、日语标注、地标线描和天空融合的修订效果。点击图片查看完整高清文件。
+
+| 东京 · 台场自由女神 | 富士山 · 河口湖 |
+| :---: | :---: |
+| [<img src="examples/odaiba-liberty-v02.jpg" width="360" alt="台场自由女神：日语海湾地图和细腻地标线描融入蓝天">](examples/odaiba-liberty-v02.jpg) | [<img src="examples/fuji-kawaguchiko-v02.jpg" width="360" alt="富士山河口湖：道路与真实高程等高线融入暮色天空，保留罗森门店和富士山原景">](examples/fuji-kawaguchiko-v02.jpg) |
+| 湾岸线条顺着大面积蓝天展开，保留雕像轮廓。 | 河口湖道路与真实高程线条分层，山体线描呼应原景。 |
+
+| 兵库 · 明石海峡大桥 | 京都 · 清水寺 |
+| :---: | :---: |
+| [<img src="examples/akashi-kaikyo-v02.jpg" width="360" alt="明石海峡大桥：细线海岸地图与日语标注避开桥梁主体">](examples/akashi-kaikyo-v02.jpg) | [<img src="examples/kyoto-kiyomizu-v02.jpg" width="360" alt="京都清水寺：可见度修正后的蓝灰地图与三重塔线描融入天空和云层">](examples/kyoto-kiyomizu-v02.jpg) |
+| 地图避让桥梁与缆索，保留海峡空间感。 | 调整地图对比度与云层遮淡，保留塔尖和树木前景。 |
+
+**北海道 · 札幌薄野**
+
+[<img src="examples/sapporo-susukino-v02.jpg" width="960" alt="北海道札幌薄野：街道层次修正版，日语地图集中于雪景左上方天空">](examples/sapporo-susukino-v02.jpg)
+
+横构图将地图放在左上方天空，区分主路与细街道，减少重复步道造成的网格感，保留真实街区结构和雪景。
+
+这组展示保留完整画幅，经过照片局部轻度清晰增强后与地图合成，再做 2× Lanczos 放大；属于高清展示导出，不是 AI 超分辨率。富士山等高线和照片派生地标线描使用本地辅助处理，当前安装包不包含通用等高线或自动线描提取器。地图数据、处理说明与图片授权见 [案例署名](examples/CREDITS.md)。
+
+### 早期案例
+
 | 东京 · 台场 | 奈良 · 若草山 |
 | :---: | :---: |
 | [<img src="examples/tokyo-odaiba.jpg" width="360" alt="东京台场：蓝灰色真实地图叠加在天空，配日文标题和东京塔实拍标记">](examples/tokyo-odaiba.jpg) | [<img src="examples/nara-wakakusa.jpg" width="360" alt="奈良若草山：纯线稿地图顺着右上方背景光微微发光，前景小鹿保持清晰">](examples/nara-wakakusa.jpg) |
@@ -87,4 +111,4 @@ Windows 已实际验证；macOS/Linux 字体查找有实现，但未在这两个
 
 代码和文档采用 [MIT](LICENSE)。照片、字体、地图及航拍数据遵守各自许可；OSM 数据为 ODbL，输出保留相应署名与许可链接。航拍和实拍符号另需保留来源、编辑说明及其许可要求。
 
-安装 ZIP 仅含 skill 通用说明、代码和软件许可。仓库另含合成测试，以及经提供者授权展示的台场、若草山两张成品；案例图片不适用代码和文档的 MIT 许可，具体来源见 [案例署名](examples/CREDITS.md)。原始照片、其他作品、地图下载缓存、私人配置及密钥不公开。
+安装 ZIP 仅含 skill 通用说明、代码和软件许可。仓库另含合成测试，以及经提供者授权展示的七张成品（新版日本五景和两张早期案例）；案例图片不适用代码和文档的 MIT 许可，具体来源见 [案例署名](examples/CREDITS.md)。原始照片、未授权作品、地图下载缓存、私人配置及密钥不公开。
