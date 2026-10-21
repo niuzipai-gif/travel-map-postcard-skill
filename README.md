@@ -4,6 +4,15 @@
 
 An agent skill for researched location identification and editorial map overlays. The host agent handles vision and research; deterministic Python helpers retrieve and draw real geography without regenerating the photograph.
 
+## 效果展示
+
+| 东京 · 台场 | 奈良 · 若草山 |
+| :---: | :---: |
+| [<img src="examples/tokyo-odaiba.jpg" width="360" alt="东京台场：蓝灰色真实地图叠加在天空，配日文标题和东京塔实拍标记">](examples/tokyo-odaiba.jpg) | [<img src="examples/nara-wakakusa.jpg" width="360" alt="奈良若草山：纯线稿地图顺着右上方背景光微微发光，前景小鹿保持清晰">](examples/nara-wakakusa.jpg) |
+| 蓝灰地图融入阴天天空，实拍塔体标记突出地标。 | 纯线稿顺着背景光微微发光，不加地形色块。 |
+
+点击图片查看完整分辨率。台场展示图另做了经授权的轻度原片修复，该步骤不属于 skill 的默认合成处理。两张案例均使用真实地图，拍摄区域标注为近似位置；图片来源与许可见 [案例署名](examples/CREDITS.md)。
+
 ## 安装
 
 需要 Python 3.10+、Pillow，以及具备看图、联网检索和本地执行能力的 agent。无需图像生成 API 密钥；地图接口由使用者选择并遵守其服务条款。
@@ -68,4 +77,4 @@ Windows 已实际验证；macOS/Linux 字体查找有实现，但未在这两个
 
 代码和文档采用 [MIT](LICENSE)。照片、字体、地图及航拍数据遵守各自许可；OSM 数据为 ODbL，输出保留相应署名与许可链接。航拍和实拍符号另需保留来源、编辑说明及其许可要求。
 
-公开包仅含通用说明、代码和合成测试。用户照片、实际作品、地图下载缓存、私人坐标及密钥均不随仓库或安装包发布。
+安装 ZIP 仅含 skill 通用说明、代码和软件许可。仓库另含合成测试，以及经提供者授权展示的台场、若草山两张成品；案例图片不适用代码和文档的 MIT 许可，具体来源见 [案例署名](examples/CREDITS.md)。原始照片、其他作品、地图下载缓存、私人配置及密钥不公开。

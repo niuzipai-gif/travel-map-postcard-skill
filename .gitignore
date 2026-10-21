@@ -13,3 +13,7 @@ private/
 *.tiff
 *.webp
 *.zip
+
+# Only these two approved README examples are public.
+!/examples/tokyo-odaiba.jpg
+!/examples/nara-wakakusa.jpg

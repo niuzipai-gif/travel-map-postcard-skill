@@ -25,7 +25,7 @@ Font-specific tests can skip when their fonts are unavailable; none skipped on t
 
 ## Local photo exercises
 
-Four travel photos were produced, visually reviewed, accepted and copied to a local desktop archive. Photos, derivatives, private configurations and detailed review receipts are excluded from this public repository.
+Four travel photos were produced, visually reviewed, accepted and copied to a local desktop archive. Two accepted viewing exports (Tokyo and Nara) are now published with the provider's authorization in [the README gallery](README.md#效果展示). Original photographs, other derivatives, private configurations and detailed review receipts remain excluded from this public repository. The installer ZIP does not include the gallery images.
 
 | Scene | Native displayed dimensions | Final treatment |
 |---|---:|---|
