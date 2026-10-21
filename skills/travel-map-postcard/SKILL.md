@@ -22,7 +22,7 @@ description: Turn travel photographs into restrained editorial map postcards by 
 - 无方形卡片、无大面积标题、无装饰性航线或无依据的比例尺。纸感主要由原片和地图线条体现，不给整张照片加滤镜。
 - 工作区保留全画幅透明 `map-overlay.png` 和无损 `postcard.png`，原始文件不覆盖。用户查看文件夹默认每张照片只放一份最终图片；工作文件、母版、重复格式和压缩包放在该文件夹之外。
 
-地图细腻度、浅色天空可见度、城市网格感、地标线描、高清输出和归档整理，读取 [references/refinement-and-delivery.md](references/refinement-and-delivery.md)。细线不等于极低透明度：先去掉粗描边，按真实道路类别分层，再在手机宽度检查可见度。
+地图细腻度、浅色天空可见度、无天空/狭窄留白排版、城市网格感、地标线描、高清输出和归档整理，读取 [references/refinement-and-delivery.md](references/refinement-and-delivery.md)。细线不等于极低透明度：先去掉粗描边，按真实道路类别分层，再在手机宽度检查可见度。标注在 bbox 内不代表经过 cover 裁切和主体遮罩后仍可见；必须检查最终图层中的锚点和红点，不能为露出红点移动真实坐标。
 
 ## 工作流程
 

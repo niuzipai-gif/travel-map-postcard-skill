@@ -1,10 +1,10 @@
 # Validation record
 
-Release: v0.2.0. Date: 2026-10-21.
+Release: v0.2.1. Date: 2026-10-22.
 
 ## Automated behavior
 
-47 tests passed on Windows with no skips. Run from the repository root:
+50 tests passed on Windows with no skips. Run from the repository root:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -21,10 +21,23 @@ The tests use synthetic fixtures and mocked network responses. They require neit
 | Fine road hierarchy | Per-highway opacity/width changes the overlay while preserving the base; invalid styles rejected before output; zero-opacity omission; arterial draw priority independent of extract order; city footway exclusion including the default mode; trail/coast path retention |
 | Real imagery | Geographic placement; source-hash validation; background-dependent relief; missing-background refusal; alpha-only adaptation preserving source RGB and cartography; sourced photographic symbol evidence |
 | Retrieval | Bounded area/tile counts; cache reuse and integrity; corrupt-cache refusal; partial-response refusal; HTTP denial handling |
+| Visible location anchors | Cover-clipped geographic anchor rejected even when text can be offset into frame; subject-hidden red marker rejected before output; surviving marker count recorded alongside preservation checks |
 
 Font-specific tests can skip when their fonts are unavailable; none skipped on the exercised Windows host. Structural skill validation checks packaging and frontmatter, not visual quality.
 
 ## Local photo exercises
+
+### v0.2.1: fourteen Japanese photographs
+
+A local 14-photo batch covered rainy streets, a dense aerial street view, open coast, narrow sunset sky, mountain/lake views, an indoor aircraft exhibit, a castle, a lighthouse and a temple. All retained their original aspect ratios and Japanese geographic labels. Where the user supplied only an island or beach area, the label remained approximate; confirmation of a landmark did not establish exact camera GPS.
+
+The private receipt records 14 native lossless compositions with zero changed pixels outside overlay alpha, zero changed protected pixels and zero recomposition mismatch. Separate viewing exports used conservative photo-only sharpening (maximum channel change 4/255 before map composition) and Lanczos interpolation to a 4096-pixel long edge. All 14 delivered files decoded and matched their staged SHA-256 hashes. These exports do not claim recovered detail or unchanged-source pixels. The images were visually reviewed by the producing agent; the receipt still records user acceptance as pending. They are not public gallery assets.
+
+A later Enoshima revision hid the red point behind a tree mask, so the earlier visible version was selected. This informed the new final-overlay marker guard. The per-photo selection also drives the contact sheet: choosing the newest directory would have displayed the rejected revision. Tight layouts on an existing blank sign or wall exposed the need to report readability limits rather than promise a large sky map for every source.
+
+The batch used local composition, mask and photo-derived line-art helpers beyond the installed renderer. Only the documented general rules and the tested projected-anchor/final-marker checks were promoted into this release. Original photos, custom per-photo configurations, caches and receipts remain private. This is production experience, not a calibrated geolocation or visual-quality benchmark.
+
+### v0.2.0: five-photo refinement (historical)
 
 The subsequent five-photo refinement cycle informed the v0.2.0 [refinement and delivery guide](skills/travel-map-postcard/references/refinement-and-delivery.md). User feedback exposed overly thick linework, generic landmark icons, disappearing maps over Kyoto and snowy Hokkaido, and an overly uniform street-grid appearance in Susukino. The guide now separates line width from contrast, emphasizes real road hierarchy and faithful landmark structure, and requires whole-image, phone-size and detail inspection. Japanese labels remain Japanese throughout.
 

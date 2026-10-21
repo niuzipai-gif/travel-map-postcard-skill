@@ -44,11 +44,30 @@ class PostcardTests(unittest.TestCase):
         self.assertEqual(report['verification']['protected_changed_pixels'],0)
 
     def test_mask_actually_removes_map_pixels(self):
-        self.cfg['protected_polygons']=[[[.35,.1],[.55,.1],[.55,.3],[.35,.3]]]
+        self.cfg['protected_polygons']=[[[.15,.1],[.25,.1],[.25,.3],[.15,.3]]]
         self.run_render()
         with Image.open(self.out/'map-overlay.png') as im: a=im.getchannel('A')
-        self.assertIsNone(a.crop((350,80,550,240)).getbbox())
+        self.assertIsNone(a.crop((150,80,250,240)).getbbox())
         self.assertIsNotNone(a.getbbox())
+
+    def test_hidden_location_marker_refuses_output(self):
+        self.cfg['protected_polygons']=[[[.35,.1],[.55,.1],[.55,.3],[.35,.3]]]
+        with self.assertRaisesRegex(ValueError,'Location marker is hidden'):
+            self.run_render()
+        self.assertFalse(self.out.exists())
+
+    def test_cover_clipped_anchor_refuses_even_with_text_offset(self):
+        self.cfg['projection_fit']='cover'
+        self.cfg['labels'][0].update(lat=35.038,offset=[0,.55])
+        with self.assertRaisesRegex(ValueError,'anchor is clipped'):
+            self.run_render()
+        self.assertFalse(self.out.exists())
+
+    def test_marker_check_records_surviving_overlay_pixels(self):
+        report=self.run_render()
+        self.assertEqual(len(report['location_marker_checks']),1)
+        self.assertGreaterEqual(report['location_marker_checks'][0]['visible_red_pixels'],3)
+        self.assertTrue(report['verification']['passed'])
 
     def test_unknown_location_blocks(self):
         self.cfg['location']['status']='unresolved'
@@ -227,7 +246,7 @@ class PostcardTests(unittest.TestCase):
         self.cfg['clear_text_backdrop']=True
         self.cfg['title_tracking']=.002
         self.cfg['glow']={'map':{'radius':2,'opacity':.5},'text':{'radius':3,'opacity':.4,'shadow_opacity':.3}}
-        self.cfg['labels'][0].update(text='Area',note='Approx. photo area',emphasis=True,leader=True)
+        self.cfg['labels'][0].update(text='Area',note='Approx. photo area',emphasis=True,leader=True,lon=139.01)
         self.cfg['highlight_features']=[{'type':'way','id':1,'evidence':'synthetic fixture'}]
         self.cfg['rect']=[0,0,1,.55]
         self.cfg['layout_exception_reason']='Test filling a large sky'

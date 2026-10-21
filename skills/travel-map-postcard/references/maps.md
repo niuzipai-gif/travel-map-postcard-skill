@@ -17,6 +17,8 @@ Do not add public Nominatim as a generic automatic geocoder. Its [usage policy](
 
 An extract bbox is a fetch window, not a location boundary. `--poi-pattern` finds named features inside it. Inspect tags and coordinates before using them. A cached extract is a dated snapshot, not a current trail-access claim.
 
+For a batch, reuse a verified extract only when its bbox contains the new map view and its dated source/hash are retained. A narrower successful download is not permission to keep drawing the larger requested view. When an operator deliberately uses a licensed regional extract or a small OSM API export after an Overpass failure, normalize geometry and record actual coverage, retrieval URL/time, transformations and omitted feature types. A custom tiled import must deduplicate by element type and ID and resolve way nodes; retain the original tile records. These are manual fallback procedures, not features of the bundled downloader. Do not repeatedly retry a failing service or disable TLS verification.
+
 ## Attribution and QA
 
 OSM data is [ODbL](https://www.openstreetmap.org/copyright). Keep `© OpenStreetMap contributors` and `openstreetmap.org/copyright` legible beside the map, and source/license links in the record. Review data-license obligations before distributing extracted databases. The software license does not relicense photos, fonts or map data.

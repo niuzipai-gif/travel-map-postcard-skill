@@ -499,6 +499,7 @@ def render(photo_path,data_path,config_path,outdir,font_path=None):
             ad.line([(subtitle_pos[0],rule_y),(subtitle_pos[0]+rw*.12,rule_y)],
                     fill=ink+(150,),width=max(1,ss))
     label_boxes=[]
+    location_markers=[]
     feature_lines=Image.new('RGBA',(rw,rh));fd=ImageDraw.Draw(feature_lines)
     for feature in config.get('highlight_features',[]):
         el=next(el for el in data['elements'] if el['type']==feature['type'] and el['id']==feature['id'])
@@ -510,10 +511,13 @@ def render(photo_path,data_path,config_path,outdir,font_path=None):
     for item in config.get('labels',[]):
         px,py=point(item['lon'],item['lat'])
         role=item.get('role','landmark'); rad=max(3,ss*min(W,H)*item.get('marker_size',.003))
+        if not (0<=px<rw and 0<=py<rh):
+            raise ValueError('Label anchor is clipped by projection; adjust map view: '+item['text'])
         item_font=text_font(min(W,H)*item.get('size',config.get('label_size',.014))*ss,item['text'],
             item.get('font_path',config.get('label_font_path',font_path)),item.get('italic',True),family,item.get('language'))
         item_ink=tuple(item.get('ink',ink))+(round(255*item.get('opacity',config.get('text_opacity',.85))),)
         if role in ('area','capture'):
+            location_markers.append((item['text'],px,py,rad))
             if role=='area' and config.get('show_uncertainty_ring',False):
                 uncertainty=item['uncertainty_m']/6378137/math.cos(math.radians(item['lat']))*scale
                 ur=max(rad*3,uncertainty)
@@ -589,6 +593,19 @@ def render(photo_path,data_path,config_path,outdir,font_path=None):
     overlay.putalpha(ImageChops.multiply(overlay.getchannel('A'),ImageChops.invert(protected)))
     if not overlay.getchannel('A').getbbox():
         raise ValueError('Protection mask removed the whole layer.')
+    marker_checks=[]
+    for name,px,py,rad in location_markers:
+        cx,cy=X+px/ss,Y+py/ss
+        radius=rad/ss
+        bounds=(max(0,math.floor(cx-radius)),max(0,math.floor(cy-radius)),
+                min(W,math.ceil(cx+radius+1)),min(H,math.ceil(cy+radius+1)))
+        # Inspect the final overlay, not the photo (which may itself contain red signs).
+        crop=overlay.crop(bounds)
+        red_pixels=sum(a>=64 and r-g>=40 and r-b>=40 for r,g,b,a in crop.getdata())
+        crop.close()
+        if red_pixels<3:
+            raise ValueError('Location marker is hidden or too faint after compositing: '+name)
+        marker_checks.append({'text':name,'visible_red_pixels':red_pixels})
     # Release supersampled working buffers before creating the full-resolution composite.
     del lines,draw,annotations,ad,feature_lines,fd,fade,local,background
     final=Image.alpha_composite(base.convert('RGBA'),overlay).convert('RGB')
@@ -614,6 +631,7 @@ def render(photo_path,data_path,config_path,outdir,font_path=None):
             'geometry_paths':count,'map_frame_fraction':w*h,'location':config['location'],
             'aerial_imagery':imagery_records,
             'photo_markers':photo_marker_records,
+            'location_marker_checks':marker_checks,
             'typography':{'title_language':config.get('title_language'),
                           'subtitle_language':config.get('subtitle_language'),
                           'title_font':str(title_font.path)},
