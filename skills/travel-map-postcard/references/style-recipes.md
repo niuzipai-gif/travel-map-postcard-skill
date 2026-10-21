@@ -4,9 +4,9 @@ Use these when the user permits creative art direction. They are starting points
 
 ## A coherent set
 
-Use the local place name in its local language/script as the main title, with a smaller English geographic subtitle. Japan: `東京` / `TOKYO`; Korea: `서울` / `SEOUL`. Verify names against the identified location and local use; multilingual places need a place-appropriate choice rather than a country-wide mechanical translation. When the local language is English, avoid duplicating the same words. Major title size, spacing and line length should be optically balanced, not forced to a fixed width.
+Use Japanese titles and map labels for Japan, Korean for Korea, and English elsewhere by default; explicit user preferences take precedence. For example, `東京` with optional `日本`, or `서울` with optional `대한민국`. Do not automatically append English translations. Verify names against the identified location and local use. Major title size, spacing and line length should be optically balanced, not forced to a fixed width.
 
-Pair a script-capable local face for the main title with a restrained serif English subtitle/callout. `title_language`, `subtitle_language` and optional local `title_font_path`/`subtitle_font_path` are supported. Check the host for suitable CJK fonts, or use a separately obtained font such as Noto CJK under its own license. The renderer refuses missing glyphs. It does not verify translation quality. Never bundle proprietary system fonts.
+Use a script-capable face for titles and callouts, with restrained size and spacing. `title_language`, `subtitle_language` and optional local `title_font_path`/`subtitle_font_path` are supported. Check the host for suitable CJK fonts, or use a separately obtained font such as Noto CJK under its own license. The renderer refuses missing glyphs. It does not verify translation quality. Never bundle proprietary system fonts.
 
 Choose a named geographic core that corresponds to the photographed subject. Keep the marker, leader and label distinct. Keep a recognizable warm or cool accent for the core while the surrounding road/shore structure remains secondary. Avoid invented quotes, routes, travel dates, GPS strings, decorative compasses or location claims.
 
@@ -31,3 +31,5 @@ These palettes are suggestions only: inspect the actual local background. If rea
 - Keep the red area marker separate from an optional gold landmark footprint. A sourced landmark shape does not prove camera GPS.
 - At phone scale, the title, the geographic core and the original subject should all remain identifiable. At full resolution, fine detail should still look deliberate.
 - Retain native PNG masters; smaller review previews are not the exact-pixel preservation record.
+
+For finer architectural symbols, visible thin strokes on pale skies, dense city streets, optional clarity enhancement and final-image-only delivery, use [refinement-and-delivery.md](refinement-and-delivery.md). Judge against the user's supplied composition references, not just a passing pixel test.

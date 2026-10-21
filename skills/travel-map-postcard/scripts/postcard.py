@@ -131,6 +131,15 @@ def validate(config, data, source):
         raise ValueError('Supported map modes: city, coast, trail. No synthetic contour mode.')
     if config.get('supersample',2) not in (1,2):
         raise ValueError('supersample must be 1 or 2.')
+    highway_styles=config.get('highway_styles',{})
+    if not isinstance(highway_styles,dict):
+        raise ValueError('highway_styles must map supported highway names to [opacity, width].')
+    for road,style in highway_styles.items():
+        if (not supported_geometry({'highway':road}) or not isinstance(style,(list,tuple))
+                or len(style)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float))
+                or not math.isfinite(v) for v in style)
+                or not 0<=style[0]<=1 or not 0<style[1]<=10):
+            raise ValueError('highway_styles requires supported highways and finite [opacity 0..1, width >0..10].')
     loc=config.get('location',{})
     if loc.get('status') not in ('verified_area','user_confirmed','gps_verified') or not loc.get('evidence'):
         raise ValueError('Location needs usable area-level evidence; ambiguous candidates must not render named maps.')
@@ -155,7 +164,8 @@ def validate(config, data, source):
         if item.get('role')=='capture' and not loc.get('camera_evidence'):
             raise ValueError('Exact capture pin needs GPS or other direct camera evidence.')
         visible_text=item['text']+' '+item.get('note','')
-        if item.get('role')=='area' and ('approx.' not in visible_text.lower() or item.get('uncertainty_m',0)<=0):
+        approximate=any(word in visible_text.lower() for word in ('approx.','おおよそ','目安','대략'))
+        if item.get('role')=='area' and (not approximate or item.get('uncertainty_m',0)<=0):
             raise ValueError('Area markers require visible approx. wording and an estimated uncertainty radius.')
     if sum(i.get('role') in ('area','capture') for i in config.get('labels',[]))>1:
         raise ValueError('Use only one red location marker.')
@@ -214,6 +224,15 @@ def geometry_style(tags):
     if 'highway' in tags: return 'minor'
     if 'building' in tags: return 'building'
     return 'landscape'
+
+
+def geometry_order(tags):
+    """Draw local streets before arterials and physical water edges, independent of OSM order."""
+    categories=('landscape','building','trail','minor','major','water','coast')
+    roads=('steps','path','footway','pedestrian','residential','unclassified',
+           'tertiary','secondary','primary','trunk','motorway')
+    return (categories.index(geometry_style(tags)),
+            roads.index(tags['highway']) if tags.get('highway') in roads else -1)
 
 
 def tracked_text(draw,xy,value,typeface,fill,tracking=0):
@@ -415,15 +434,16 @@ def render(photo_path,data_path,config_path,outdir,font_path=None):
               'minor':[.48,.85],'major':[.82,1.45],'water':[.82,1.65],'coast':[1,2.0]}
     styles={**defaults,**config.get('geometry_styles',{})}
     # Draw strong cartographic structure last: a fine street must not erase a coast.
-    ordered=sorted(geometry_paths(data),key=lambda pair:list(defaults).index(geometry_style(pair[0])))
+    ordered=sorted(geometry_paths(data),key=lambda pair:geometry_order(pair[0]))
     count=0
     for tags,geometry in ordered:
         pts=[point(p['lon'],p['lat']) for p in geometry if 'lat' in p and 'lon' in p]
         if len(pts)<2: continue
         road=tags.get('highway','')
         trail=road in ('path','steps','footway')
-        if config.get('mode')=='city' and trail: continue
-        opacity,line_width=styles[geometry_style(tags)]
+        if config.get('mode','city')=='city' and trail: continue
+        opacity,line_width=config.get('highway_styles',{}).get(road,styles[geometry_style(tags)])
+        if opacity==0: continue
         category=geometry_style(tags)
         line_ink=tuple(config.get('geometry_inks',{}).get(category,ink))
         alpha=round(255*strength*opacity)

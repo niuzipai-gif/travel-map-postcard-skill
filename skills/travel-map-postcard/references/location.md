@@ -5,7 +5,7 @@ Separate visible subject, capture area and exact camera position. Recognizing a 
 1. Inspect signs, silhouettes, relative building positions, water/land relationships, language and terrain. Record visible observations before candidate names.
 2. Search candidate plus discriminating clue in appropriate languages. Open an official venue/park/tourism reference and compare. A search snippet alone is weaker evidence.
 3. Test alternatives: original vs replica, same-name sites, subject vs viewpoint, wrong region, mirrored photo. Copied pages are not independent evidence.
-4. Use only supported precision. A verified area with unknown camera point is a normal success. Use a small red area dot + `approx. area`; keep the uncertainty radius in the configuration. An optional uncertainty circle is illustrative, not a measured confidence interval, and is off by default.
+4. Use only supported precision. A verified area with unknown camera point is a normal success. Use a small red area dot plus a visible approximate-area label: `撮影エリア（目安）` for Japanese, `대략적인 촬영 지역` for Korean, or `approx. area` for English; keep the uncertainty radius in the configuration. An optional uncertainty circle is illustrative, not a measured confidence interval, and is off by default.
 5. If competing cities remain plausible, ask for one clue and keep `unresolved`. Do not render a certain name while waiting. A user-selected location-free version omits geography and marker rather than fabricating a map.
 
 Confidence is qualitative agent judgment, not a calibrated recognition accuracy percentage. A source proving that a landmark exists does not independently prove that this photograph depicts it; state the matching inference.

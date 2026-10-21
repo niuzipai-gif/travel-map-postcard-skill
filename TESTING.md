@@ -1,10 +1,10 @@
 # Validation record
 
-Release: v0.1.0. Date: 2026-10-21.
+Release: v0.2.0. Date: 2026-10-21.
 
 ## Automated behavior
 
-40 tests passed on Windows with no skips. Run from the repository root:
+47 tests passed on Windows with no skips. Run from the repository root:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -17,13 +17,20 @@ The tests use synthetic fixtures and mocked network responses. They require neit
 | Photo preservation | Full dimensions and EXIF orientation; unchanged input files; protected regions and pixels outside overlay alpha; exact recomposition; overwrite refusal |
 | Geographic evidence | Unknown-location refusal; exact-pin evidence; visible approximation wording; uniform north-up projection; clipping and cover projection; exclusion of nonphysical bay boundaries; no fabricated contour mode |
 | Layout and emphasis | Cloud-based attenuation; subject protection with glow; valid sourced highlight IDs; marker/text clearance; captions not cut by subject masks; light-corner glow without moving strokes |
-| Titles and fonts | Japanese titles with English subtitles; Hangul-capable font selection; incompatible missing-glyph rejection |
+| Titles and fonts | Japanese and Korean titles, subtitles and localized approximate-area notes; explicit English subtitle compatibility; missing-glyph rejection; visible uncertainty wording plus radius still required |
+| Fine road hierarchy | Per-highway opacity/width changes the overlay while preserving the base; invalid styles rejected before output; zero-opacity omission; arterial draw priority independent of extract order; city footway exclusion including the default mode; trail/coast path retention |
 | Real imagery | Geographic placement; source-hash validation; background-dependent relief; missing-background refusal; alpha-only adaptation preserving source RGB and cartography; sourced photographic symbol evidence |
 | Retrieval | Bounded area/tile counts; cache reuse and integrity; corrupt-cache refusal; partial-response refusal; HTTP denial handling |
 
 Font-specific tests can skip when their fonts are unavailable; none skipped on the exercised Windows host. Structural skill validation checks packaging and frontmatter, not visual quality.
 
 ## Local photo exercises
+
+The subsequent five-photo refinement cycle informed the v0.2.0 [refinement and delivery guide](skills/travel-map-postcard/references/refinement-and-delivery.md). User feedback exposed overly thick linework, generic landmark icons, disappearing maps over Kyoto and snowy Hokkaido, and an overly uniform street-grid appearance in Susukino. The guide now separates line width from contrast, emphasizes real road hierarchy and faithful landmark structure, and requires whole-image, phone-size and detail inspection. Japanese labels remain Japanese throughout.
+
+Final selection is per photograph rather than per batch version number. A later cleanup request established final-image-only viewing folders, with masters and process artifacts retained outside them. Same-place filenames must not be treated as duplicate photographs. These are workflow lessons, not an automated visual-quality benchmark. The five new photos, reference images and private production records are not included in this repository. No new restoration model, automatic line-art extractor or archive-cleanup script is claimed.
+
+### Earlier v0.1.0 exercises (historical)
 
 Four travel photos were produced, visually reviewed, accepted and copied to a local desktop archive. Two accepted viewing exports (Tokyo and Nara) are now published with the provider's authorization in [the README gallery](README.md#效果展示). Original photographs, other derivatives, private configurations and detailed review receipts remain excluded from this public repository. The installer ZIP does not include the gallery images.
 

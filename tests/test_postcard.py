@@ -74,6 +74,84 @@ class PostcardTests(unittest.TestCase):
         self.cfg['labels'][0]['text']='My exact viewpoint'
         with self.assertRaisesRegex(ValueError,'approx'):self.run_render()
 
+    def test_localized_approximation_requires_visible_wording_and_radius(self):
+        for text in ('撮影エリア（目安）','おおよその撮影エリア','대략적인 촬영 지역'):
+            with self.subTest(text=text):
+                self.cfg['labels'][0]['text']=text
+                pc.validate(self.cfg,self.data,self.source)
+                self.cfg['labels'][0]['uncertainty_m']=0
+                with self.assertRaisesRegex(ValueError,'uncertainty'):
+                    pc.validate(self.cfg,self.data,self.source)
+                self.cfg['labels'][0]['uncertainty_m']=200
+        self.cfg['labels'][0]['text']='撮影場所'
+        with self.assertRaisesRegex(ValueError,'approx'):
+            pc.validate(self.cfg,self.data,self.source)
+
+    def test_japanese_titles_and_localized_area_note_render(self):
+        try:pc.text_font(44,'撮影エリア目安',language='ja')
+        except FileNotFoundError:self.skipTest('No local Japanese font installed.')
+        self.cfg.update(title='東京',subtitle='日本',title_language='ja',subtitle_language='ja')
+        self.cfg['labels'][0].update(text='撮影エリア',note='目安',language='ja')
+        self.assertTrue(self.run_render()['verification']['passed'])
+
+    def test_korean_titles_and_localized_area_note_render(self):
+        try:pc.text_font(44,'대략적인촬영지역서울',language='ko')
+        except FileNotFoundError:self.skipTest('No local Korean font installed.')
+        self.cfg.update(title='서울',subtitle='대한민국',title_language='ko',subtitle_language='ko')
+        self.cfg['labels'][0].update(text='촬영 지역',note='대략적인 위치',language='ko')
+        self.assertTrue(self.run_render()['verification']['passed'])
+
+    def test_invalid_highway_styles_fail_before_output(self):
+        for value in ([],{'invented':[.5,1]}, {'primary':[.5]}, {'primary':[True,1]},
+                      {'primary':[float('nan'),1]}, {'primary':[.5,float('inf')]},
+                      {'primary':[-.1,1]}, {'primary':[1.1,1]}, {'primary':[.5,0]},
+                      {'primary':[.5,11]}):
+            with self.subTest(value=value):
+                self.cfg['highway_styles']=value
+                with self.assertRaisesRegex(ValueError,'highway_styles'):self.run_render()
+                self.assertFalse(self.out.exists())
+
+    def test_highway_style_changes_overlay_preserving_photo(self):
+        baseline=self.run_render()
+        self.out=self.root/'fine'
+        self.cfg['highway_styles']={'primary':[.30,.55]}
+        refined=self.run_render()
+        self.assertNotEqual(baseline['files']['map-overlay.png'],refined['files']['map-overlay.png'])
+        self.assertEqual(baseline['files']['photo-base.png'],refined['files']['photo-base.png'])
+        self.assertTrue(refined['verification']['passed'])
+        self.out=self.root/'omitted'
+        self.cfg['highway_styles']['primary']=[0,.55]
+        self.assertEqual(self.run_render()['geometry_paths'],0)
+
+    def test_city_omits_footways_but_trail_mode_keeps_them(self):
+        for index,highway in enumerate(('footway','path','steps'),2):
+            way=copy.deepcopy(self.data['elements'][0]);way['id']=index;way['tags']={'highway':highway}
+            self.data['elements'].append(way)
+        self.map.write_text(json.dumps(self.data),encoding='utf-8')
+        self.source['data_sha256']=pc.digest(self.map)
+        self.map.with_suffix('.source.json').write_text(json.dumps(self.source),encoding='utf-8')
+        self.assertEqual(self.run_render()['geometry_paths'],1)
+        for mode in ('city','trail','coast'):
+            self.out=self.root/mode;self.cfg['mode']=mode
+            report=self.run_render()
+            self.assertEqual(report['geometry_paths'],1 if mode=='city' else 4)
+            self.assertTrue(report['verification']['passed'])
+
+    def test_arterial_priority_does_not_depend_on_extract_order(self):
+        # Coincident synthetic roads isolate the draw-order effect; no real geography is fabricated.
+        small=copy.deepcopy(self.data['elements'][0]);small['id']=2;small['tags']={'highway':'tertiary'}
+        self.data['elements'].append(small)
+        self.cfg['highway_styles']={'primary':[.9,1.5],'tertiary':[.1,.5]}
+        hashes=[]
+        for index in range(2):
+            self.data['elements'].reverse()
+            self.map.write_text(json.dumps(self.data),encoding='utf-8')
+            self.source['data_sha256']=pc.digest(self.map)
+            self.map.with_suffix('.source.json').write_text(json.dumps(self.source),encoding='utf-8')
+            self.out=self.root/str(index)
+            hashes.append(self.run_render()['files']['map-overlay.png'])
+        self.assertEqual(hashes[0],hashes[1])
+
     def test_corrupted_map_provenance_blocks(self):
         self.map.write_text(json.dumps({'elements':[]}),encoding='utf-8')
         with self.assertRaisesRegex(ValueError,'hash'):self.run_render()
